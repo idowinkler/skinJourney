@@ -1,4 +1,4 @@
-package com.example.mystudentsapplication
+package com.example.skinJourney
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

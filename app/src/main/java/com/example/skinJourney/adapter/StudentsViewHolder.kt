@@ -1,13 +1,13 @@
-package com.example.mystudentsapplication.adapter
+package com.example.skinJourney.adapter
 
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mystudentsapplication.OnItemClickListener
-import com.example.mystudentsapplication.model.Student
-import com.example.mystudentsapplication.R
-import com.example.mystudentsapplication.model.Model
+import com.example.skinJourney.OnItemClickListener
+import com.example.skinJourney.model.Student
+import com.example.skinJourney.R
+import com.example.skinJourney.model.Model
 
 class StudentsViewHolder(itemView: View, listener: OnItemClickListener?): RecyclerView.ViewHolder(itemView) {
         var fullnameTextView: TextView? = null

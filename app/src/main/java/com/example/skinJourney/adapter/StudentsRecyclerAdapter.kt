@@ -1,11 +1,11 @@
-package com.example.mystudentsapplication.adapter
+package com.example.skinJourney.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mystudentsapplication.OnItemClickListener
-import com.example.mystudentsapplication.model.Student
-import com.example.mystudentsapplication.R
+import com.example.skinJourney.OnItemClickListener
+import com.example.skinJourney.model.Student
+import com.example.skinJourney.R
 
 class StudentsRecyclerAdapter(private var students: List<Student>?): RecyclerView.Adapter<StudentsViewHolder>() {
     var listener: OnItemClickListener? = null

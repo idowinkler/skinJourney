@@ -1,4 +1,4 @@
-package com.example.mystudentsapplication.model
+package com.example.skinJourney.model
 
 import android.os.Looper
 import androidx.core.os.HandlerCompat

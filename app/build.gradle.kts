@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.mystudentsapplication"
+    namespace = "com.example.skinJourney"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.mystudentsapplication"
+        applicationId = "com.example.skinJourney"
         minSdk = 29
         targetSdk = 34
         versionCode = 1

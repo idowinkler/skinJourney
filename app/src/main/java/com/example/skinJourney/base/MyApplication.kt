@@ -1,4 +1,4 @@
-package com.example.mystudentsapplication.base
+package com.example.skinJourney.base
 
 import android.app.Application
 import android.content.Context

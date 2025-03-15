@@ -1,4 +1,4 @@
-package com.example.mystudentsapplication
+package com.example.skinJourney
 
 import android.os.Bundle
 import android.widget.Button
@@ -8,8 +8,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.mystudentsapplication.model.Model
-import com.example.mystudentsapplication.model.Student
+import com.example.skinJourney.model.Model
+import com.example.skinJourney.model.Student
 
 class AddStudentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

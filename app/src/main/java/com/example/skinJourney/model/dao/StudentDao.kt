@@ -1,11 +1,11 @@
-package com.example.mystudentsapplication.model.dao
+package com.example.skinJourney.model.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.mystudentsapplication.model.Student
+import com.example.skinJourney.model.Student
 
 // NOTE: keeping this unused code. was approved by tal zion on 20/2 zoom meeting
 @Dao

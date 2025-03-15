@@ -1,4 +1,4 @@
-package com.example.mystudentsapplication.model
+package com.example.skinJourney.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

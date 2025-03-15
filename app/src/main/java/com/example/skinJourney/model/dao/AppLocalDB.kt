@@ -1,10 +1,10 @@
-package com.example.mystudentsapplication.model.dao
+package com.example.skinJourney.model.dao
 
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.mystudentsapplication.base.MyApplication
-import com.example.mystudentsapplication.model.Student
+import com.example.skinJourney.base.MyApplication
+import com.example.skinJourney.model.Student
 
 @Database(entities = [Student::class], version = 1)
 abstract class AppLocalDbRepository: RoomDatabase() {
