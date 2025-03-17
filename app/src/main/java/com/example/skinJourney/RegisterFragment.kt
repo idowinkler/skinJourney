@@ -69,15 +69,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import com.example.skinJourney.databinding.FragmentRegisterBinding
 import com.example.skinJourney.model.FirebaseModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class RegisterFragment : Fragment() {
 
     private lateinit var binding: FragmentRegisterBinding
     private lateinit var firebaseModel: FirebaseModel
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,7 +93,6 @@ class RegisterFragment : Fragment() {
 
         // Handle register button click
         binding.registerButton.setOnClickListener {
-            // Handle registration logic here
             val email = binding.emailInput.text.toString().trim()
             val password = binding.passwordInput.text.toString().trim()
             val nickname = binding.nicknameInput.text.toString().trim()
@@ -103,15 +101,21 @@ class RegisterFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty() && nickname.isNotEmpty()) {
                 // Call the register function
                 firebaseModel.register(email, password, nickname) { success, error ->
-                    if (success) {
-                        Log.d("REGISTER", "Registration successful")
-                        val intent = Intent(requireContext(), MainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
-                        // Navigate to login or home screen
-                    } else {
-                        Log.e("REGISTER", "Registration failed: $error")
-                        Toast.makeText(requireContext(), "Registration failed: $error", Toast.LENGTH_SHORT).show()
+                    if(isAdded){
+                        if (success) {
+                            Log.d("REGISTER", "Registration successful")
+                            val intent = Intent(requireContext(), MainActivity::class.java)
+                            startActivity(intent)
+                            requireActivity().finish()
+                        } else {
+                            Log.e("REGISTER", "Registration failed: $error")
+                            MaterialAlertDialogBuilder(requireContext())
+                                .setTitle("Registration failed")
+                                .setMessage(error)
+                                .setNeutralButton("Try again") { dialog, _ ->
+                                    dialog.dismiss()
+                                }
+                                .show()                        }
                     }
                 }
             } else {
@@ -121,13 +125,8 @@ class RegisterFragment : Fragment() {
         }
 
         // Handle navigation back to LoginFragment
-        binding.switchToLogin.setOnClickListener {
+        binding.loginHereTextView.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_loginFragment)
         }
     }
-
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        binding = null
-//    }
 }
