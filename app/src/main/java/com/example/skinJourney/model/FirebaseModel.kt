@@ -67,4 +67,8 @@ class FirebaseModel {
     fun logout() {
         auth.signOut()
     }
+
+    fun get_current_user(): String? {
+        return auth.currentUser?.uid
+    }
 }
