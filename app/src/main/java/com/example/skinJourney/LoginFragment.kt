@@ -15,7 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentLoginBinding
+    private lateinit var binding: FragmentLoginBinding? = null
     private lateinit var firebaseModel: FirebaseModel
 
     override fun onCreateView(
@@ -68,5 +68,10 @@ class LoginFragment : Fragment() {
         binding.registerHereTextView.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 }
