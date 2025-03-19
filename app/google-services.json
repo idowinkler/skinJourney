@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "777622494781",
+    "project_id": "skinjourney-ed2b6",
+    "storage_bucket": "skinjourney-ed2b6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:777622494781:android:c600baa284ab7b25ecd454",
+        "android_client_info": {
+          "package_name": "com.example.skinJourney"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGXywoZmE9uTEyKuQJruvGUtucOfb8AnM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
