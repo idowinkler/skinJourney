@@ -69,4 +69,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui:2.8.9")
     implementation(libs.circleimageview)
     implementation(libs.picasso)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation("com.google.code.gson:gson:2.10.1")
 }

@@ -1,10 +1,12 @@
 package com.example.skinJourney.model
 
 import android.graphics.Bitmap
+import android.util.Log
 import com.example.skinJourney.base.EmptyCallback
 import com.example.skinJourney.base.PostsCallback
-
+import com.example.skinJourney.utils.analyzeSkinFromBitmap
 import com.idz.colman24class2.model.CloudinaryModel
+import java.util.logging.Logger
 
 class Model private constructor() {
 
@@ -38,7 +40,22 @@ class Model private constructor() {
         callback(samplePosts.shuffled())
     }
 
-    fun addStudent(student: Student, profileImage: Bitmap?, storage: Storage, callback: EmptyCallback) {
+    fun addPost(post: Post, postImage: Bitmap?, storage: Storage, callback: EmptyCallback) {
+        postImage?.let {
+            uploadImageToCloudinary(
+                            image = it,
+                           onSuccess = { url ->
+                               Log.i("TAG", url)    // Info log
+//                               val st = student.copy(avatarUrl = url)
+//                               firebaseModel.add(st, callback)
+                               analyzeSkinFromBitmap("AIzaSyCvFczlE2yq1hR5z1p-NKicEfdPRkurPKM", postImage) { result ->
+                                   Log.d("SkinAnalysis", "API for skinnnnn: $result") // ✅ LOGGING RESPONSE
+                               }
+                               callback()
+                           },
+                           onError = { callback() }
+                       )
+        }
 //        firebaseModel.add(student) {
 //            profileImage?.let {
 //
@@ -67,17 +84,19 @@ class Model private constructor() {
 //                }
 //            } ?: callback()
         }
-    }
 
     private fun uploadImageToFirebase(image: Bitmap, name: String, callback: (String?) -> Unit) {
 //        firebaseModel.uploadImage(image, name, callback)
     }
 
-    private fun uploadImageToCloudinary(image: Bitmap, name: String, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
-//        cloudinaryModel.uploadBitmap(
-//            bitmap = image,
-////            name = name,
-//            onSuccess = onSuccess,
-//            onError = onError
-//        )
+     fun uploadImageToCloudinary(image: Bitmap, onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+        cloudinaryModel.uploadBitmap(
+            bitmap = image,
+            onSuccess = onSuccess,
+            onError = onError
+        )
     }
+}
+
+
+

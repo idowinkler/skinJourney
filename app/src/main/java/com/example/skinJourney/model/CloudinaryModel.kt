@@ -2,7 +2,6 @@ package com.idz.colman24class2.model
 
 import android.content.Context
 import android.graphics.Bitmap
-import com.cloudinary.android.BuildConfig
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
