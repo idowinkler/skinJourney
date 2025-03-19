@@ -2,4 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background_color">#EDE0E0</color>  <!-- Light Pinkish Background -->
+    <color name="purple_500">#6A1B9A</color>  <!-- Purple color for buttons -->
 </resources>

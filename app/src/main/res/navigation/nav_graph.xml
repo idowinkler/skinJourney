@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/profileFragment">
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.skinJourney.ui.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/progressFragment"
+        android:name="com.example.skinJourney.ui.ProgressFragment"
+        android:label="Progress"
+        tools:layout="@layout/fragment_progress">
+        <action
+            android:id="@+id/action_progress_to_post"
+            app:destination="@id/postFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.example.skinJourney.ui.ExploreFragment"
+        android:label="Explore"
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/action_explore_to_post"
+            app:destination="@id/postFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addPostFragment"
+        android:name="com.example.skinJourney.ui.AddPostFragment"
+        android:label="Add PoST"/>
+
+    <fragment
+        android:id="@+id/postFragment"
+        android:name="com.example.skinJourney.ui.PostFragment"
+        android:label="Post"
+        tools:layout="@layout/fragment_post">
+        <argument
+            android:name="post"
+            app:argType="com.example.skinJourney.model.Post"
+            app:nullable="false"/>
+        <action
+            android:id="@+id/action_post_to_edit_post"
+            app:destination="@id/editPostFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.example.skinJourney.ui.EditPostFragment"
+        android:label="Edit Post"
+        tools:layout="@layout/fragment_edit_post">
+        <argument
+            android:name="post"
+            app:argType="com.example.skinJourney.model.Post"
+            app:nullable="false"/>
+    </fragment>
+
+    <action
+        android:id="@+id/action_global_addPostFragment"
+        app:destination="@id/addPostFragment"/>
+</navigation>
