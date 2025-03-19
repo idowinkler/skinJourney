@@ -15,7 +15,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentLoginBinding? = null
+    private var binding: FragmentLoginBinding? = null
     private lateinit var firebaseModel: FirebaseModel
 
     override fun onCreateView(
@@ -32,9 +32,9 @@ class LoginFragment : Fragment() {
         firebaseModel = FirebaseModel()
 
         // Handle login button click
-        binding.loginButton.setOnClickListener {
-            val email = binding.emailInput.text.toString().trim()
-            val password = binding.passwordInput.text.toString().trim()
+        binding?.loginButton?.setOnClickListener {
+            val email = binding?.emailInput?.text.toString().trim()
+            val password = binding?.passwordInput?.text.toString().trim()
 
             // Check if all fields are filled
             if (email.isNotEmpty() && password.isNotEmpty()) {
@@ -65,7 +65,7 @@ class LoginFragment : Fragment() {
         }
 
         // Handle navigation to RegisterFragment
-        binding.registerHereTextView.setOnClickListener {
+        binding?.registerHereTextView?.setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }
