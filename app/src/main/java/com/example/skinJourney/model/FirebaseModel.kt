@@ -133,7 +133,7 @@ class FirebaseModel {
     fun addPostToFirebase(post: Post) {
         database.collection("posts").document(post.uid).set(post)
             .addOnSuccessListener {
-                fetchPostsWithUserDetails() // Refresh posts list
+                fetchPostsWithUserDetails()
             }
             .addOnFailureListener {
                 Log.e("FirebaseModel", "Error adding post", it)
@@ -143,7 +143,7 @@ class FirebaseModel {
     fun updatePostInFirebase(post: Post) {
         database.collection("posts").document(post.uid).set(post)
             .addOnSuccessListener {
-                fetchPostsWithUserDetails() // Refresh posts list
+                fetchPostsWithUserDetails()
             }
             .addOnFailureListener {
                 Log.e("FirebaseModel", "Error updating post", it)
@@ -153,7 +153,7 @@ class FirebaseModel {
     fun deletePostFromFirebase(post: Post) {
         database.collection("posts").document(post.uid).delete()
             .addOnSuccessListener {
-                fetchPostsWithUserDetails() // Refresh posts list
+                fetchPostsWithUserDetails()
             }
             .addOnFailureListener {
                 Log.e("FirebaseModel", "Error deleting post", it)

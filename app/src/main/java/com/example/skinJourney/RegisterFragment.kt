@@ -51,12 +51,10 @@ class RegisterFragment : Fragment() {
                         binding?.registerLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
 
                         if (success) {
-                            Log.d("REGISTER", "Registration successful")
                             val intent = Intent(requireContext(), MainActivity::class.java)
                             startActivity(intent)
                             requireActivity().finish()
                         } else {
-                            Log.e("REGISTER", "Registration failed: $error")
                             MaterialAlertDialogBuilder(requireContext())
                                 .setTitle("Registration failed")
                                 .setMessage(error)

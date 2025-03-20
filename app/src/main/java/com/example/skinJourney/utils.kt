@@ -36,23 +36,17 @@ object utils {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.NO_WRAP)  // ✅ NO_WRAP prevents line breaks
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP)
     }
 
     fun analyzeSkinFromBitmap(apiKey: String, originalBitmap: Bitmap, callback: (String) -> Unit) {
-//        val resizedBitmap = resizeBitmap(originalBitmap)  // Resizing before encoding
         val base64Image = convertBitmapToBase64(originalBitmap)
 
-        // ✅ Debugging: Check if Base64 is empty
+        // Check if Base64 is empty
         if (base64Image.isEmpty()) {
-            Log.e("GeminiUtils", "Base64 conversion failed. Exiting function.")
             callback("Image encoding failed.")
             return
         }
-
-        // ✅ Debugging: Log Base64 info
-        Log.d("GeminiUtils", "Base64 Size: ${base64Image.length}")
-        Log.d("GeminiUtils", "Base64 Start: ${base64Image}")  // Only log first 50 chars
 
         val request = GeminiRequest(
             contents = listOf(
@@ -75,16 +69,9 @@ object utils {
             )
         )
 
-        // ✅ Debugging: Log the request payload
-        Log.d("GeminiUtils", "Request JSON: ${request.toString()}")
-
         RetrofitClient.apiService.analyzeImage(apiKey, request)
             .enqueue(object : Callback<GeminiResponse> {
                 override fun onResponse(call: Call<GeminiResponse>, response: Response<GeminiResponse>) {
-                    Log.d("GeminiUtils", "HTTP Response Code: ${response.code()}")
-                    Log.d("GeminiUtils", "Full Response: ${response.raw()}")
-                    Log.d("GeminiUtils", "Body: ${response.body()}")
-
                     val output = response.body()?.candidates?.firstOrNull()?.content?.parts?.firstOrNull()?.text
 
                     val finalResult = when {
@@ -94,12 +81,10 @@ object utils {
                         else -> output
                     }
 
-                    Log.d("GeminiUtils", "API Response: $finalResult")
                     callback(finalResult)
                 }
 
                 override fun onFailure(call: Call<GeminiResponse>, t: Throwable) {
-                    Log.e("GeminiUtils", "Request failed: ${t.message}")
                     callback("Request failed: ${t.message}")
                 }
             })
