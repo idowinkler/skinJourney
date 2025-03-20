@@ -68,6 +68,16 @@ class ExploreFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding?.loadingOverlay?.visibility = View.VISIBLE
+                binding?.exploreLayout?.animate()?.alpha(0.5f)?.setDuration(300)?.start()
+            } else {
+                binding?.loadingOverlay?.visibility = View.GONE
+                binding?.exploreLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
+            }
+        }
+
         viewModel.otherUsersPosts.observe(viewLifecycleOwner) { posts ->
             adapter?.set(posts)
             adapter?.notifyDataSetChanged()

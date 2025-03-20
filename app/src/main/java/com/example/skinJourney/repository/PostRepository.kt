@@ -61,7 +61,7 @@ class PostRepository @Inject constructor() {
     }
 
     fun addPost(post: Post) {
-        val postWithTimestamp = post.copy(timestamp = System.currentTimeMillis()) // ✅ Add timestamp
+        val postWithTimestamp = post.copy(timestamp = System.currentTimeMillis())
         firebaseModel.addPostToFirebase(postWithTimestamp)
         savePostToRoom(postWithTimestamp)
     }

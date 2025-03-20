@@ -20,7 +20,6 @@ class EditProfileFragment : Fragment() {
     private var binding: FragmentEditProfileBinding? = null
     private var imageUri: Uri? = null
     private lateinit var userViewModel: UserViewModel
-//    private val storageRef = FirebaseStorage.getInstance().reference
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,6 +40,16 @@ class EditProfileFragment : Fragment() {
             }
         })
 
+        userViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding?.loadingOverlay?.visibility = View.VISIBLE
+                binding?.editProfileLayout?.animate()?.alpha(0.5f)?.setDuration(300)?.start()
+            } else {
+                binding?.loadingOverlay?.visibility = View.GONE
+                binding?.editProfileLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
+            }
+        }
+
         userViewModel.fetchUser()
 
         // Image picker
@@ -59,7 +68,7 @@ class EditProfileFragment : Fragment() {
             Navigation.findNavController(it).navigate(R.id.action_editProfileFragment_to_profileFragment)
         }
 
-//        // Save button
+        // Save button
         binding?.saveButton?.setOnClickListener {
             val newNickname = binding?.nicknameEditText?.text.toString().trim()
             if (newNickname.isEmpty()) {

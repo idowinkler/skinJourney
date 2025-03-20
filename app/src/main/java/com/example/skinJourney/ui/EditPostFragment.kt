@@ -86,16 +86,27 @@ class EditPostFragment : Fragment() {
         val imageBitmap = getBitmapIfChanged(binding.postImage, R.drawable.profile, requireContext())
 
         if (updatedDescription.isNotEmpty() && post != null) {
+            // Show loading spinner
+            binding.loadingOverlay.visibility = View.VISIBLE
+            binding.editPostLayout.animate().alpha(0.5f).setDuration(300).start()
+
             if (didPickImage && imageBitmap != null) {
                 CloudinaryModel.uploadBitmap(imageBitmap, onSuccess = { imageUrl ->
                     analyzeSkinFromBitmap("AIzaSyCvFczlE2yq1hR5z1p-NKicEfdPRkurPKM", imageBitmap) { aiAnalysis ->
                         updatePostInDatabase(updatedDescription, imageUrl, aiAnalysis)
                     }
+
+                    // Hide loading spinner
+                    binding.loadingOverlay.visibility = View.GONE
+                    binding.editPostLayout.animate().alpha(1f).setDuration(300).start()
                 }, onError = {
                     Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
                 })
             } else {
                 updatePostInDatabase(updatedDescription, post!!.imageUrl, post!!.aiAnalysis)
+                // Hide loading spinner
+                binding.loadingOverlay.visibility = View.GONE
+                binding.editPostLayout.animate().alpha(1f).setDuration(300).start()
             }
         } else {
             Toast.makeText(requireContext(), "Please enter a description", Toast.LENGTH_SHORT).show()
