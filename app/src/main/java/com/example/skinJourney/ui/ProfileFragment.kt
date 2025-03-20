@@ -1,5 +1,6 @@
 package com.example.skinJourney.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.example.skinJourney.AuthenticationActivity
 import com.example.skinJourney.R
-import com.example.skinJourney.databinding.FragmentEditPostBinding
 import com.example.skinJourney.databinding.FragmentProfileBinding
 import com.example.skinJourney.model.FirebaseModel
 import com.example.skinJourney.viewmodel.UserViewModel
@@ -45,7 +46,8 @@ class ProfileFragment : Fragment() {
                 .setMessage("Are you sure you want to log out?")
                 .setPositiveButton("Yes") { _, _ ->
                     firebaseModel.logout()
-                    Navigation.findNavController(requireView()).navigate(R.id.action_profileFragment_to_loginFragment)
+                    val intent = Intent(requireContext(), AuthenticationActivity::class.java)
+                    startActivity(intent)
                 }
                 .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
                 .show()

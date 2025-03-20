@@ -13,10 +13,11 @@ import com.google.firebase.storage.storage
 
 class FirebaseModel {
     private val database = Firebase.firestore
-    private val storage = Firebase.storage
     private val auth: FirebaseAuth = Firebase.auth
     private val _userLiveData = MutableLiveData<User?>()
     val userLiveData: LiveData<User?> = _userLiveData
+    private val _postsLiveData = MutableLiveData<List<PostWithUser>>()
+    val postsLiveData: LiveData<List<PostWithUser>> get() = _postsLiveData
 
     init {
         val setting = firestoreSettings {
@@ -26,7 +27,6 @@ class FirebaseModel {
         database.firestoreSettings = setting
     }
 
-    // Register a new user and store their nickname
     fun register(email: String, password: String, nickname: String, callback: (Boolean, String?) -> Unit) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -55,7 +55,6 @@ class FirebaseModel {
             }
     }
 
-    // Login existing user
     fun login(email: String, password: String, callback: (Boolean, String?) -> Unit) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -67,7 +66,6 @@ class FirebaseModel {
             }
     }
 
-    // Logout user
     fun logout() {
         auth.signOut()
     }
@@ -87,7 +85,78 @@ class FirebaseModel {
     }
 
     fun saveUserToFirebase(user: User) {
-//        database.collection("users").document(user.uid).set(user)
         database.collection("users").document(user.uid).set(user)
+    }
+
+    fun fetchPostsWithUserDetails() {
+        database.collection("posts").get()
+            .addOnSuccessListener { snapshot ->
+                val posts = snapshot.documents.mapNotNull { it.toObject(Post::class.java) }
+                if (posts.isNotEmpty()) {
+                    val userIds = posts.map { it.userId }.distinct()
+
+                    database.collection("users")
+                        .whereIn("uid", userIds)
+                        .get()
+                        .addOnSuccessListener { userSnapshot ->
+                            val usersMap = userSnapshot.documents.associateBy(
+                                { it.id }, { it.toObject(User::class.java) }
+                            )
+
+                            val postsWithUsers = posts.map { post ->
+                                val user = usersMap[post.userId]
+                                PostWithUser(
+                                    post.uid,
+                                    post.description,
+                                    post.imageUrl,
+                                    post.userId,
+                                    post.aiAnalysis,
+                                    user?.nickname ?: "Unknown",
+                                    "todo",
+                                    post.timestamp,
+                                    )
+                            }
+
+                            _postsLiveData.postValue(postsWithUsers)
+                        }
+                        .addOnFailureListener {
+                            Log.e("FirebaseModel", "Error fetching user details", it)
+                        }
+                }
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseModel", "Error fetching posts", it)
+            }
+    }
+
+
+    fun addPostToFirebase(post: Post) {
+        database.collection("posts").document(post.uid).set(post)
+            .addOnSuccessListener {
+                fetchPostsWithUserDetails() // Refresh posts list
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseModel", "Error adding post", it)
+            }
+    }
+
+    fun updatePostInFirebase(post: Post) {
+        database.collection("posts").document(post.uid).set(post)
+            .addOnSuccessListener {
+                fetchPostsWithUserDetails() // Refresh posts list
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseModel", "Error updating post", it)
+            }
+    }
+
+    fun deletePostFromFirebase(post: Post) {
+        database.collection("posts").document(post.uid).delete()
+            .addOnSuccessListener {
+                fetchPostsWithUserDetails() // Refresh posts list
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseModel", "Error deleting post", it)
+            }
     }
 }
