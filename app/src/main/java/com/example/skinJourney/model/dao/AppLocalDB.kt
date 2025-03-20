@@ -4,14 +4,17 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.skinJourney.base.MyApplication
-import com.example.skinJourney.model.Student
+import com.example.skinJourney.database.UserDao
+import com.example.skinJourney.model.Post
+import com.example.skinJourney.model.User
+import com.example.skinJourney.repository.PostDao
 
-@Database(entities = [Student::class], version = 1)
+@Database(entities = [User::class, Post::class], version = 4)
 abstract class AppLocalDbRepository: RoomDatabase() {
-    abstract fun studentDao(): StudentDao
+    abstract fun userDao(): UserDao
+    abstract fun postDao(): PostDao
 }
 
-// NOTE: keeping this unused code. was approved by tal zion on 20/2 zoom meeting
 object AppLocalDB {
     val db: AppLocalDbRepository by lazy {
         val context = MyApplication.Globals.context

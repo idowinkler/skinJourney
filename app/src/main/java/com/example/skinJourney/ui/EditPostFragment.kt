@@ -1,15 +1,25 @@
 package com.example.skinJourney.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import com.example.skinJourney.R
 import com.example.skinJourney.databinding.FragmentEditPostBinding
+import com.example.skinJourney.model.CloudinaryModel
 import com.example.skinJourney.model.Post
+import com.example.skinJourney.repository.PostRepository
+import com.example.skinJourney.utils.analyzeSkinFromBitmap
+import com.example.skinJourney.utils.getBitmapIfChanged
+import com.example.skinJourney.viewmodel.PostViewModel
+import com.example.skinJourney.viewmodel.PostViewModelFactory
 import com.squareup.picasso.Picasso
 
 class EditPostFragment : Fragment() {
@@ -17,12 +27,22 @@ class EditPostFragment : Fragment() {
     private var _binding: FragmentEditPostBinding? = null
     private val binding get() = _binding!!
     private var post: Post? = null
+    private lateinit var viewModel: PostViewModel
+    private var didPickImage = false
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        CloudinaryModel.initialize(context)
+        val repository = PostRepository()
+        val factory = PostViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         post = arguments?.let {
-            PostFragmentArgs.fromBundle(it).post
+            EditPostFragmentArgs.fromBundle(it).post
         }
     }
 
@@ -31,18 +51,17 @@ class EditPostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentEditPostBinding.inflate(inflater, container, false)
+        setupUI()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    private fun setupUI() {
         post?.let {
             binding.postDescription.setText(it.description)
-            post?.imageUrl?.let { imageUrl ->
-                val url = imageUrl.ifBlank { return }
+
+            if (it.imageUrl.isNotBlank()) {
                 Picasso.get()
-                    .load(url)
+                    .load(it.imageUrl)
                     .placeholder(R.drawable.profile)
                     .into(binding.postImage)
             }
@@ -50,12 +69,53 @@ class EditPostFragment : Fragment() {
 
         cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
             binding.postImage.setImageBitmap(bitmap)
+            didPickImage = true
         }
 
         binding.cameraButton.setOnClickListener {
             cameraLauncher?.launch(null)
         }
 
+        binding.saveButton.setOnClickListener {
+            savePost()
+        }
+    }
+
+    private fun savePost() {
+        val updatedDescription = binding.postDescription.text.toString()
+        val imageBitmap = getBitmapIfChanged(binding.postImage, R.drawable.profile, requireContext())
+
+        if (updatedDescription.isNotEmpty() && post != null) {
+            if (didPickImage && imageBitmap != null) {
+                CloudinaryModel.uploadBitmap(imageBitmap, onSuccess = { imageUrl ->
+                    analyzeSkinFromBitmap("AIzaSyCvFczlE2yq1hR5z1p-NKicEfdPRkurPKM", imageBitmap) { aiAnalysis ->
+                        updatePostInDatabase(updatedDescription, imageUrl, aiAnalysis)
+                    }
+                }, onError = {
+                    Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
+                })
+            } else {
+                updatePostInDatabase(updatedDescription, post!!.imageUrl, post!!.aiAnalysis)
+            }
+        } else {
+            Toast.makeText(requireContext(), "Please enter a description", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updatePostInDatabase(description: String, imageUrl: String, aiAnalysis: String) {
+        val updatedPost = post?.copy(
+            description = description,
+            imageUrl = imageUrl,
+            aiAnalysis = aiAnalysis
+        )
+
+        updatedPost?.let {
+            viewModel.updatePost(it)
+            Toast.makeText(requireContext(), "Post updated successfully", Toast.LENGTH_SHORT).show()
+            Navigation.findNavController(binding.root).popBackStack()
+            Navigation.findNavController(binding.root).popBackStack()
+
+        }
     }
 
     override fun onDestroyView() {

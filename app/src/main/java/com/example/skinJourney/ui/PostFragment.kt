@@ -1,22 +1,35 @@
 package com.example.skinJourney.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.skinJourney.R
 import com.example.skinJourney.databinding.FragmentPostBinding
 import com.example.skinJourney.model.Post
+import com.example.skinJourney.repository.PostRepository
+import com.example.skinJourney.viewmodel.PostViewModel
+import com.example.skinJourney.viewmodel.PostViewModelFactory
+import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
     private var _binding: FragmentPostBinding? = null
     private val binding get() = _binding!!
     private var post: Post? = null
+    private lateinit var viewModel: PostViewModel
 
-//    TODO NOT SHOW EDIT AND DELETE BUTTON WHEN NOT USER'S POST
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val repository = PostRepository()
+        val factory = PostViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,31 +44,49 @@ class PostFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPostBinding.inflate(inflater, container, false)
+        setupUI()
 
-        binding.editButton.setOnClickListener({
-            post?.let {
-                val action = PostFragmentDirections.actionPostToEditPost(it)
-                binding?.root?.let {
-                    Navigation.findNavController(it).navigate(action)
-                }
-            }
-        })
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    private fun setupUI() {
         post?.let {
             binding.postDescription.text = it.description
+            binding.aiAnalysis.text = it.aiAnalysis
 
-            post?.imageUrl?.let { imageUrl ->
-                val url = imageUrl.ifBlank { return }
-                Picasso.get()
-                    .load(url)
-                    .placeholder(R.drawable.profile)
-                    .into(binding.postImage)
+            it.imageUrl.let { imageUrl ->
+                if (imageUrl.isNotBlank()) {
+                    Picasso.get()
+                        .load(imageUrl)
+                        .placeholder(R.drawable.profile)
+                        .into(binding.postImage)
+                }
             }
+        }
+
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        if (post?.userId != currentUserId) {
+            binding.editButton.visibility = View.GONE
+            binding.deleteButton.visibility = View.GONE
+        } else {
+            binding.editButton.setOnClickListener {
+                post?.let {
+                    val action = PostFragmentDirections.actionPostToEditPost(it)
+                    Navigation.findNavController(binding.root).navigate(action)
+                }
+            }
+
+            binding.deleteButton.setOnClickListener {
+                deletePost()
+            }
+        }
+    }
+
+    private fun deletePost() {
+        post?.let {
+            viewModel.deletePost(it)
+            Toast.makeText(requireContext(), "Post deleted", Toast.LENGTH_SHORT).show()
+            Navigation.findNavController(binding.root).popBackStack()
         }
     }
 

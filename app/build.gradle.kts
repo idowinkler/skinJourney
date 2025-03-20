@@ -5,6 +5,7 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.google.services)
     id("kotlin-parcelize")
+    kotlin("kapt")
 }
 
 android {
@@ -71,7 +72,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
-    implementation(libs.material.v1100)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.cloudinary.android)
@@ -84,4 +84,9 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.kotlinx.metadata.jvm)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    implementation("org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0")
+    implementation(libs.material.v1110)
 }
