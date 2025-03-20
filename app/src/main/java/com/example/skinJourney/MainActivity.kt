@@ -17,8 +17,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        ProgressBarHandler.init(this)
 
         val navHostFragment: NavHostFragment? =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as? NavHostFragment

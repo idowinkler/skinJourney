@@ -15,6 +15,7 @@ import com.example.skinJourney.model.Post
 import com.example.skinJourney.repository.PostRepository
 import com.example.skinJourney.viewmodel.PostViewModel
 import com.example.skinJourney.viewmodel.PostViewModelFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
 
@@ -77,7 +78,14 @@ class PostFragment : Fragment() {
             }
 
             binding.deleteButton.setOnClickListener {
-                deletePost()
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Delete")
+                    .setMessage("Are you sure you want to delete this post?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        deletePost()
+                    }
+                    .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+                    .show()
             }
         }
     }

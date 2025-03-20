@@ -9,7 +9,7 @@ import com.example.skinJourney.model.Post
 import com.example.skinJourney.model.User
 import com.example.skinJourney.repository.PostDao
 
-@Database(entities = [User::class, Post::class], version = 4)
+@Database(entities = [User::class, Post::class], version = 5)
 abstract class AppLocalDbRepository: RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun postDao(): PostDao

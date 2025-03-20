@@ -76,6 +76,17 @@ class EditPostFragment : Fragment() {
             cameraLauncher?.launch(null)
         }
 
+        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                binding?.postImage?.setImageURI(it)
+                didPickImage = true
+            }
+        }
+
+        binding?.galleryButton?.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
         binding.saveButton.setOnClickListener {
             savePost()
         }
@@ -88,7 +99,7 @@ class EditPostFragment : Fragment() {
         if (updatedDescription.isNotEmpty() && post != null) {
             if (didPickImage && imageBitmap != null) {
                 CloudinaryModel.uploadBitmap(imageBitmap, onSuccess = { imageUrl ->
-                    analyzeSkinFromBitmap("AIzaSyCvFczlE2yq1hR5z1p-NKicEfdPRkurPKM", imageBitmap) { aiAnalysis ->
+                    analyzeSkinFromBitmap("AIzaSyA6KZpdbJZICvqyg4tgXDXV4jQeQML1BxM", imageBitmap) { aiAnalysis ->
                         updatePostInDatabase(updatedDescription, imageUrl, aiAnalysis)
                     }
                 }, onError = {

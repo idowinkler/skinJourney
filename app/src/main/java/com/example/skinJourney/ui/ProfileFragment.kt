@@ -14,6 +14,7 @@ import com.example.skinJourney.databinding.FragmentProfileBinding
 import com.example.skinJourney.model.FirebaseModel
 import com.example.skinJourney.viewmodel.UserViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.squareup.picasso.Picasso
 
 class ProfileFragment : Fragment() {
     private var binding: FragmentProfileBinding? = null
@@ -27,19 +28,29 @@ class ProfileFragment : Fragment() {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
         firebaseModel = FirebaseModel()
 
+
         userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
         userViewModel.fetchUser()
 
         userViewModel.userLiveData.observe(viewLifecycleOwner) { user ->
+            if (user == null) {
+                return@observe
+            }
+
             binding?.nicknameTextView?.text = user?.nickname ?: "User"
+            val imageUrl = user.imageUrl?.trim()
+            if (!imageUrl.isNullOrEmpty()) {
+                Picasso.get()
+                    .load(imageUrl)
+                    .placeholder(R.drawable.profile)
+                    .into(binding?.profileImageView)
+            }
         }
 
-        // Edit profile button
         binding?.editProfileButton?.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
 
-        // Logout
         binding?.logoutButton?.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Logout")

@@ -15,7 +15,7 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         repository.fetchUserFromFirebase()
     }
 
-    fun updateUser(nickname: String) {
-        repository.saveUserToFirebase(nickname)
+    fun updateUser(nickname: String, imageUl: String?) {
+        repository.saveUserToFirebase(nickname, imageUl)
     }
 }

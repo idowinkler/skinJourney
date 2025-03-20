@@ -117,10 +117,12 @@
             android:id="@+id/progressIndicator"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_gravity="center"
             app:indicatorSize="64dp"
             app:trackThickness="6dp"
             app:indicatorColor="@color/purple_500"
-            android:layout_gravity="center" />
+            android:indeterminate="true"
+            />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

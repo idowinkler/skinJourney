@@ -28,22 +28,18 @@ class UserRepository(context: Context) {
         }
     }
 
-    // Update the nickname on Firebase and Room (only the nickname)
-    fun saveUserToFirebase(nickname: String) {
-        val currentUserId = firebaseModel.getCurrentUser() ?: return
-
-        // Fetch the current user data from Room or Firebase
+    fun saveUserToFirebase(nickname: String, imageUrl: String?) {
         firebaseModel.fetchUserFromFirebase()
         val currentUser = firebaseModel.userLiveData.value
 
         if (currentUser != null) {
-            // Update the nickname field
-            val updatedUser = currentUser.copy(nickname = nickname)
+            var updatedUser = currentUser.copy(nickname = nickname)
 
-            // Save the updated user to Firebase
+            if (imageUrl !== null) {
+                 updatedUser = updatedUser.copy(imageUrl = imageUrl)
+            }
+
             firebaseModel.saveUserToFirebase(updatedUser)
-
-            // Save the updated user to Room
             saveUserToRoom(updatedUser)
         }
     }
