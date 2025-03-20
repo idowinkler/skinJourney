@@ -2,80 +2,85 @@ package com.example.skinJourney.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.skinJourney.ExploreViewModel
-import com.example.skinJourney.ProgressViewModel
 import com.example.skinJourney.adapter.ExploreRecyclerAdapter
 import com.example.skinJourney.adapter.OnItemClickListener
-import com.example.skinJourney.adapter.ProgressRecyclerAdapter
 import com.example.skinJourney.databinding.FragmentExploreBinding
-import com.example.skinJourney.databinding.FragmentProgressBinding
-import com.example.skinJourney.model.Model
 import com.example.skinJourney.model.Post
+import com.example.skinJourney.model.PostWithUser
+import com.example.skinJourney.repository.PostRepository
+import com.example.skinJourney.viewmodel.PostViewModel
+import com.example.skinJourney.viewmodel.PostViewModelFactory
 
 class ExploreFragment : Fragment() {
-
     private var adapter: ExploreRecyclerAdapter? = null
     private var binding: FragmentExploreBinding? = null
-    private var viewModel: ExploreViewModel? = null
+    private lateinit var viewModel: PostViewModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        viewModel = ViewModelProvider(this)[ExploreViewModel::class.java]
+        val repository = PostRepository()
+        val factory = PostViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentExploreBinding.inflate(inflater, container, false)
+        setupRecyclerView()
+        observeViewModel()
 
-        binding?.recyclerView?.setHasFixedSize(true)
+        return binding!!.root
+    }
 
-        val layoutManager = LinearLayoutManager(context)
-        binding?.recyclerView?.layoutManager = layoutManager
+    private fun setupRecyclerView() {
+        binding?.recyclerView?.apply {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+        }
 
-        adapter = ExploreRecyclerAdapter(viewModel?.posts)
-
-        adapter?.listener = object : OnItemClickListener {
-            override fun onItemClick(post: Post?) {
-                post?.let {
-                    val action = ExploreFragmentDirections.actionExploreToPost(it)
-                    binding?.root?.let {
-                        Navigation.findNavController(it).navigate(action)
+        adapter = ExploreRecyclerAdapter(emptyList()).also { adapterInstance ->
+            adapterInstance.listener = object : OnItemClickListener {
+                override fun onItemClick(post: PostWithUser?) {
+                    post?.let {
+                        val postObject = Post(
+                            uid = it.id,
+                            description = it.description,
+                            imageUrl = it.imageUrl,
+                            userId = it.userId,
+                            aiAnalysis = it.aiAnalysis
+                        )
+                        val action = ExploreFragmentDirections.actionExploreToPost(postObject)
+                        findNavController().navigate(action)
                     }
                 }
             }
+            binding?.recyclerView?.adapter = adapterInstance
         }
+    }
 
-        binding?.recyclerView?.adapter = adapter
-
-        return binding?.root
+    private fun observeViewModel() {
+        viewModel.otherUsersPosts.observe(viewLifecycleOwner) { posts ->
+            adapter?.set(posts)
+            adapter?.notifyDataSetChanged()
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        getAllProgressPosts()
+        viewModel.fetchPosts()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         binding = null
-    }
-
-    private fun getAllProgressPosts() {
-        Model.shared.getAllProgressPosts {
-            viewModel?.set(posts = it)
-            adapter?.set(it)
-            adapter?.notifyDataSetChanged()
-
-        }
     }
 }

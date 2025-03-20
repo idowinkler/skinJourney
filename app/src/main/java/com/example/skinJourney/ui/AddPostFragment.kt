@@ -1,52 +1,60 @@
 package com.example.skinJourney.ui
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import androidx.navigation.findNavController
 import com.example.skinJourney.R
 import com.example.skinJourney.databinding.FragmentAddPostBinding
-import com.example.skinJourney.model.Model
+import com.example.skinJourney.model.CloudinaryModel
 import com.example.skinJourney.model.Post
+import com.example.skinJourney.repository.PostRepository
+import com.example.skinJourney.utils.analyzeSkinFromBitmap
 import com.example.skinJourney.utils.getBitmapIfChanged
+import com.example.skinJourney.viewmodel.PostViewModel
+import com.example.skinJourney.viewmodel.PostViewModelFactory
+import java.util.UUID
 
 class AddPostFragment : Fragment() {
     private var cameraLauncher: ActivityResultLauncher<Void?>? = null
     private var binding: FragmentAddPostBinding? = null
+    private lateinit var viewModel: PostViewModel
     private var didPickImage = false
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        val repository = PostRepository()
+        val factory = PostViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[PostViewModel::class.java]
+        CloudinaryModel.initialize(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddPostBinding.inflate(inflater, container, false)
         binding?.uploadButton?.setOnClickListener(::onUploadClicked)
-
         cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
             binding?.postImage?.setImageBitmap(bitmap)
             didPickImage = true
         }
-
         binding?.cameraButton?.setOnClickListener {
             cameraLauncher?.launch(null)
         }
 
-        return binding?.root
+        return binding!!.root
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         binding = null
     }
 
@@ -55,19 +63,30 @@ class AddPostFragment : Fragment() {
         val imageBitmap = getBitmapIfChanged(binding?.postImage, R.drawable.profile, requireContext())
 
         if (description.isNotEmpty() && imageBitmap != null) {
-            val post = Post(
-                id = binding?.postDescription?.text?.toString() ?: "",
-                description = binding?.postDescription?.text?.toString() ?: "",
-                imageUrl = "",
-                userId = "ido"
-            )
 
-            Model.shared.addPost(post, imageBitmap, Model.Storage.CLOUDINARY) {
-                Navigation.findNavController(view)?.popBackStack()
-            }
+            val userId = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: "unknown_user"
+            val postId = UUID.randomUUID().toString()
 
+            CloudinaryModel.uploadBitmap(imageBitmap, onSuccess = { imageUrl ->
+                analyzeSkinFromBitmap("AIzaSyCvFczlE2yq1hR5z1p-NKicEfdPRkurPKM", imageBitmap) { aiAnalysis ->
+                    val post = Post(
+                        uid = postId,
+                        description = description,
+                        imageUrl = imageUrl,
+                        aiAnalysis = aiAnalysis,
+                        userId = userId
+                    )
+
+                    viewModel.addPost(post)
+                    Toast.makeText(requireContext(), "Post added", Toast.LENGTH_SHORT).show()
+                    Navigation.findNavController(view).popBackStack()
+                }
+            }, onError = {
+                Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
+            })
         } else {
             Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
         }
     }
+
 }

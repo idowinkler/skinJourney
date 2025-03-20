@@ -4,12 +4,15 @@ circleimageview = "3.1.0"
 cloudinaryAndroid = "3.0.2"
 constraintlayoutVersion = "2.1.4"
 glide = "4.16.0"
+googleMaterial = "1.11.0"
+hiltAndroidGradlePlugin = "2.50"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
+kotlinxMetadataJvm = "0.5.0"
 material = "1.12.0"
 activity = "1.9.3"
 constraintlayout = "2.2.0"
@@ -40,10 +43,12 @@ circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circ
 cloudinary-android = { module = "com.cloudinary:cloudinary-android", version.ref = "cloudinaryAndroid" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlinx-metadata-jvm = { module = "org.jetbrains.kotlinx:kotlinx-metadata-jvm", version.ref = "kotlinxMetadataJvm" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -53,6 +58,7 @@ firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx", version.ref = "firebaseAuthKtx" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.10.0" }
 material-v1100 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+material-v1110 = { module = "com.google.android.material:material", version.ref = "googleMaterial" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 
