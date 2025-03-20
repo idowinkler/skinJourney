@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_profileFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
 
     <fragment
@@ -69,7 +72,7 @@
     <fragment
         android:id="@+id/addPostFragment"
         android:name="com.example.skinJourney.ui.AddPostFragment"
-        android:label="Add PoST"/>
+        android:label="Add Post"/>
 
     <fragment
         android:id="@+id/postFragment"
