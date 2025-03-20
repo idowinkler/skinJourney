@@ -45,7 +45,7 @@ class ProfileFragment : Fragment() {
                 .setMessage("Are you sure you want to log out?")
                 .setPositiveButton("Yes") { _, _ ->
                     firebaseModel.logout()
-                    Navigation.findNavController(requireView()).navigate(R.id.action_profileFragment_to_loginFragment)
+//                    Navigation.findNavController(requireView()).navigate(R.id.action_profileFragment_to_loginFragment)
                 }
                 .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
                 .show()

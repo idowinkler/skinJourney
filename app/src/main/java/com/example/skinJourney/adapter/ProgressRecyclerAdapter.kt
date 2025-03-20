@@ -25,6 +25,6 @@ class ProgressRecyclerAdapter(private var posts: List<PostWithUser>?) :
     }
 
     override fun onBindViewHolder(holder: ProgressViewHolder, position: Int) {
-        holder.bind(posts?.get(position), position) // ✅ Ensure PostWithUser is passed
+        holder.bind(posts?.get(position), position)
     }
 }
