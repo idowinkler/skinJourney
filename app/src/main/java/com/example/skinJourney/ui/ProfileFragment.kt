@@ -5,53 +5,51 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.skinJourney.R
 import com.example.skinJourney.databinding.FragmentEditPostBinding
 import com.example.skinJourney.databinding.FragmentProfileBinding
+import com.example.skinJourney.model.FirebaseModel
+import com.example.skinJourney.viewmodel.UserViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ProfileFragment : Fragment() {
     private var binding: FragmentProfileBinding? = null
+    private lateinit var firebaseModel: FirebaseModel
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
+        firebaseModel = FirebaseModel()
 
-//        val auth = FirebaseAuth.getInstance()
-//        val user = auth.currentUser
-//        val database = FirebaseDatabase.getInstance().reference.child("users").child(user!!.uid)
-//
-//        // Load user data
-//        database.get().addOnSuccessListener {
-//            val nickname = it.child("nickname").value as? String
-//            val profileImage = it.child("profileImage").value as? String
-//            binding.nicknameTextView.text = nickname ?: "User"
-//            profileImage?.let { url ->
-//                Picasso.get().load(url).into(binding.profileImageView)
-//            }
-//        }
+        userViewModel = ViewModelProvider(this).get(UserViewModel::class.java)
+        userViewModel.fetchUser()
+
+        userViewModel.userLiveData.observe(viewLifecycleOwner) { user ->
+            binding?.nicknameTextView?.text = user?.nickname ?: "User"
+        }
 
         // Edit profile button
         binding?.editProfileButton?.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.action_profileFragment_to_editProfileFragment)
         }
 
-//        // Logout button
-//        binding?.logoutButton?.setOnClickListener {
-//            MaterialAlertDialogBuilder(requireContext())
-//                .setTitle("Logout")
-//                .setMessage("Are you sure you want to log out?")
-//                .setPositiveButton("Yes") { _, _ ->
-//                    auth.signOut()
-//                    Navigation.findNavController(it)
-//                        .navigate(R.id.action_profileFragment_to_loginFragment)
-//                }
-//                .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
-//                .show()
-//        }
+        // Logout
+        binding?.logoutButton?.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Yes") { _, _ ->
+                    firebaseModel.logout()
+                    Navigation.findNavController(requireView()).navigate(R.id.action_profileFragment_to_loginFragment)
+                }
+                .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+                .show()
+        }
 
         return binding?.root
     }

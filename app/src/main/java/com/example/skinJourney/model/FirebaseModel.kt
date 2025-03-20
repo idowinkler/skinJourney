@@ -1,6 +1,8 @@
 package com.example.skinJourney.model
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -13,6 +15,8 @@ class FirebaseModel {
     private val database = Firebase.firestore
     private val storage = Firebase.storage
     private val auth: FirebaseAuth = Firebase.auth
+    private val _userLiveData = MutableLiveData<User?>()
+    val userLiveData: LiveData<User?> = _userLiveData
 
     init {
         val setting = firestoreSettings {
@@ -68,7 +72,22 @@ class FirebaseModel {
         auth.signOut()
     }
 
-    fun get_current_user(): String? {
+    fun getCurrentUser(): String? {
         return auth.currentUser?.uid
+    }
+
+    fun fetchUserFromFirebase() {
+        val userId = getCurrentUser() ?: return
+        database.collection("users").document(userId).get().addOnSuccessListener { snapshot ->
+            val user = snapshot.toObject(User::class.java)
+            _userLiveData.postValue(user)
+        }.addOnFailureListener {
+            Log.e("FirebaseRepository", "Error fetching user", it)
+        }
+    }
+
+    fun saveUserToFirebase(user: User) {
+//        database.collection("users").document(user.uid).set(user)
+        database.collection("users").document(user.uid).set(user)
     }
 }
