@@ -39,9 +39,17 @@ class RegisterFragment : Fragment() {
 
             // Check if all fields are filled
             if (email.isNotEmpty() && password.isNotEmpty() && nickname.isNotEmpty()) {
+                // Show loading spinner
+                binding?.loadingOverlay?.visibility = View.VISIBLE
+                binding?.registerLayout?.animate()?.alpha(0.5f)?.setDuration(300)?.start()
+
                 // Call the register function
                 firebaseModel.register(email, password, nickname) { success, error ->
                     if(isAdded){
+                        // Hide loading spinner
+                        binding?.loadingOverlay?.visibility = View.GONE
+                        binding?.registerLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
+
                         if (success) {
                             Log.d("REGISTER", "Registration successful")
                             val intent = Intent(requireContext(), MainActivity::class.java)

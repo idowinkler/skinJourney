@@ -38,9 +38,17 @@ class LoginFragment : Fragment() {
 
             // Check if all fields are filled
             if (email.isNotEmpty() && password.isNotEmpty()) {
+                // Show loading spinner
+                binding?.loadingOverlay?.visibility = View.VISIBLE
+                binding?.loginLayout?.animate()?.alpha(0.5f)?.setDuration(300)?.start()
+
                 // Call the register function
                 firebaseModel.login(email, password) { success, error ->
                     if(isAdded) {
+                        // Hide loading spinner
+                        binding?.loadingOverlay?.visibility = View.GONE
+                        binding?.loginLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
+
                         if (success) {
                             Log.d("LOGIN", "Login successful")
                             val intent = Intent(requireContext(), MainActivity::class.java)
