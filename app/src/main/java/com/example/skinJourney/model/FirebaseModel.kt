@@ -111,8 +111,8 @@ class FirebaseModel {
                                     post.imageUrl,
                                     post.userId,
                                     post.aiAnalysis,
-                                    user?.nickname ?: "Unknown",
-                                    "todo",
+                                    user?.nickname ?: "",
+                                    user?.imageUrl ?: "",
                                     post.timestamp,
                                     )
                             }

@@ -25,10 +25,11 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateUser(nickname: String) {
+
+    fun updateUser(nickname: String, imageUl: String?) {
         _isLoading.value = true
         viewModelScope.launch {
-            repository.saveUserToFirebase(nickname)
+            repository.saveUserToFirebase(nickname, imageUl)
             _isLoading.value = false
         }
     }

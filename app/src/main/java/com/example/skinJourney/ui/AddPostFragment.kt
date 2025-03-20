@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import com.example.skinJourney.ProgressBarHandler
 import com.example.skinJourney.R
 import com.example.skinJourney.databinding.FragmentAddPostBinding
 import com.example.skinJourney.model.CloudinaryModel
@@ -52,6 +53,16 @@ class AddPostFragment : Fragment() {
             cameraLauncher?.launch(null)
         }
 
+        val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            uri?.let {
+                binding?.postImage?.setImageURI(it)
+            }
+        }
+
+        binding?.galleryButton?.setOnClickListener {
+            pickImageLauncher.launch("image/*")
+        }
+
         return binding!!.root
     }
 
@@ -74,7 +85,7 @@ class AddPostFragment : Fragment() {
             val postId = UUID.randomUUID().toString()
 
             CloudinaryModel.uploadBitmap(imageBitmap, onSuccess = { imageUrl ->
-                analyzeSkinFromBitmap("AIzaSyCvFczlE2yq1hR5z1p-NKicEfdPRkurPKM", imageBitmap) { aiAnalysis ->
+                analyzeSkinFromBitmap("AIzaSyA6KZpdbJZICvqyg4tgXDXV4jQeQML1BxM", imageBitmap) { aiAnalysis ->
                     val post = Post(
                         uid = postId,
                         description = description,
@@ -89,9 +100,11 @@ class AddPostFragment : Fragment() {
                     binding?.addPostLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
 
                     Toast.makeText(requireContext(), "Post added", Toast.LENGTH_SHORT).show()
+                    ProgressBarHandler.hide()
                     Navigation.findNavController(view).popBackStack()
                 }
             }, onError = {
+                ProgressBarHandler.hide()
                 Toast.makeText(requireContext(), "Image upload failed", Toast.LENGTH_SHORT).show()
             })
         } else {

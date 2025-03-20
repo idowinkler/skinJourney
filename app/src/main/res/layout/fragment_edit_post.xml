@@ -31,7 +31,7 @@
             android:textSize="16sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/postImage"
         android:layout_width="0dp"
         android:layout_height="300dp"
@@ -41,19 +41,37 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textInputLayout"
-        app:layout_constraintVertical_bias="0.041" />
+        app:layout_constraintVertical_bias="0.041"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.MediumComponent"
+        app:srcCompat="@drawable/profile" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/cameraButton"
         android:layout_width="110dp"
         android:layout_height="48dp"
-        android:layout_marginTop="175dp"
+        android:layout_marginTop="172dp"
         android:elevation="0dp"
         android:text="camera"
         android:textSize="16sp"
         app:cornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.24"
+        app:layout_constraintHorizontal_bias="0.059"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/postImage"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/galleryButton"
+        android:layout_width="110dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="172dp"
+        android:elevation="0dp"
+        android:text="gallery"
+        android:textSize="16sp"
+        app:cornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/postImage"
         app:strokeColor="?attr/colorPrimary"
@@ -63,13 +81,13 @@
         android:id="@+id/saveButton"
         android:layout_width="110dp"
         android:layout_height="48dp"
-        android:layout_marginTop="175dp"
+        android:layout_marginTop="172dp"
         android:elevation="0dp"
         android:text="save"
         android:textSize="16sp"
         app:cornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.357"
+        app:layout_constraintHorizontal_bias="0.888"
         app:layout_constraintStart_toEndOf="@+id/cameraButton"
         app:layout_constraintTop_toBottomOf="@id/postImage"
         app:strokeColor="?attr/colorPrimary"
