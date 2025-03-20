@@ -28,7 +28,7 @@ class AuthenticationActivity : AppCompatActivity() {
 
         firebaseModel = FirebaseModel()
 
-        if(firebaseModel.get_current_user() != null){
+        if(firebaseModel.getCurrentUser() != null){
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
