@@ -1,6 +1,7 @@
 package com.example.skinJourney.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.skinJourney.model.Post
@@ -14,9 +15,14 @@ class PostViewModel constructor(
     val userPosts: LiveData<List<PostWithUser>> = repository.userPostsLiveData
     val otherUsersPosts: LiveData<List<PostWithUser>> = repository.otherUsersPostsLiveData
 
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading: LiveData<Boolean> get() = _isLoading
+
     fun fetchPosts() {
+        _isLoading.value = true
         viewModelScope.launch {
             repository.fetchPostsFromFirebase()
+            _isLoading.value = false
         }
     }
 

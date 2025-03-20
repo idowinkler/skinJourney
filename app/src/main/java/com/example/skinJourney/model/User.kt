@@ -6,7 +6,8 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey val uid: String,
     val email: String,
-    var nickname: String
+    var nickname: String,
+    var imageUrl: String
 ) {
-    constructor() : this("", "", "")
+    constructor() : this("", "", "", "")
 }

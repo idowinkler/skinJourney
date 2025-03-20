@@ -13,5 +13,5 @@ data class Post(
     val imageUrl: String = "",
     val aiAnalysis: String = "",
     val userId: String = "",
-    val timestamp: Long = System.currentTimeMillis() // ✅ Store timestamp for sorting
+    val timestamp: Long = System.currentTimeMillis()
 ) : Parcelable

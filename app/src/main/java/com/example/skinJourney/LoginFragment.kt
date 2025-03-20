@@ -50,12 +50,10 @@ class LoginFragment : Fragment() {
                         binding?.loginLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
 
                         if (success) {
-                            Log.d("LOGIN", "Login successful")
                             val intent = Intent(requireContext(), MainActivity::class.java)
                             startActivity(intent)
                             requireActivity().finish()
                         } else {
-                            Log.e("LOGIN", "Login failed: $error")
                             MaterialAlertDialogBuilder(requireContext())
                                 .setTitle("Login failed")
                                 .setMessage(error)

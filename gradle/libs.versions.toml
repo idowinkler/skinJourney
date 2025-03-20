@@ -5,6 +5,7 @@ cloudinaryAndroid = "3.0.2"
 constraintlayoutVersion = "2.1.4"
 glide = "4.16.0"
 googleMaterial = "1.11.0"
+googleMaterialVersion = "1.9.0"
 hiltAndroidGradlePlugin = "2.50"
 kotlin = "1.9.24"
 coreKtx = "1.15.0"
@@ -59,6 +60,7 @@ firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx",
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version = "33.10.0" }
 material-v1100 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 material-v1110 = { module = "com.google.android.material:material", version.ref = "googleMaterial" }
+material-v190 = { module = "com.google.android.material:material", version.ref = "googleMaterialVersion" }
 picasso = { module = "com.squareup.picasso:picasso", version.ref = "picasso" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 

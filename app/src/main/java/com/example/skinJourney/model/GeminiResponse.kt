@@ -5,7 +5,7 @@ data class GeminiResponse(
 )
 
 data class Candidate(
-    val content: ResponseContent? // Changed from output to content, as the response is inside content
+    val content: ResponseContent?
 )
 
 data class ResponseContent(
@@ -13,5 +13,5 @@ data class ResponseContent(
 )
 
 data class ResponsePart(
-    val text: String? // Text is inside parts, not directly in candidate
+    val text: String?
 )

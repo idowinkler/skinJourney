@@ -23,7 +23,6 @@ class ExploreViewHolder(
         this.post = post
         binding.username.text = post?.userName
 
-//        TODO CHANGE WHEN USER PIC
         post?.imageUrl?.let { userImageUrl ->
             if (userImageUrl.isNotBlank()) {
                 Picasso.get()

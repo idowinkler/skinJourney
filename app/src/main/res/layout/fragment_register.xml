@@ -139,7 +139,8 @@
             app:indicatorSize="64dp"
             app:trackThickness="6dp"
             app:indicatorColor="@color/purple_500"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:indeterminate="true" />
     </FrameLayout>
 
 

@@ -68,6 +68,16 @@ class ProgressFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        viewModel?.isLoading?.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding?.loadingOverlay?.visibility = View.VISIBLE
+                binding?.progressLayout?.animate()?.alpha(0.5f)?.setDuration(300)?.start()
+            } else {
+                binding?.loadingOverlay?.visibility = View.GONE
+                binding?.progressLayout?.animate()?.alpha(1f)?.setDuration(300)?.start()
+            }
+        }
+
         viewModel?.userPosts?.observe(viewLifecycleOwner) { posts ->
             adapter?.set(posts)
             adapter?.notifyDataSetChanged()

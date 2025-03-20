@@ -11,11 +11,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.example.skinJourney.R
 import com.example.skinJourney.databinding.FragmentPostBinding
+import com.example.skinJourney.model.FirebaseModel
 import com.example.skinJourney.model.Post
 import com.example.skinJourney.repository.PostRepository
 import com.example.skinJourney.viewmodel.PostViewModel
 import com.example.skinJourney.viewmodel.PostViewModelFactory
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.squareup.picasso.Picasso
 
 class PostFragment : Fragment() {
@@ -23,6 +24,7 @@ class PostFragment : Fragment() {
     private val binding get() = _binding!!
     private var post: Post? = null
     private lateinit var viewModel: PostViewModel
+    private lateinit var firebaseModel: FirebaseModel
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -64,7 +66,8 @@ class PostFragment : Fragment() {
             }
         }
 
-        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        firebaseModel = FirebaseModel()
+        val currentUserId = firebaseModel.getCurrentUser()
         if (post?.userId != currentUserId) {
             binding.editButton.visibility = View.GONE
             binding.deleteButton.visibility = View.GONE
@@ -77,7 +80,14 @@ class PostFragment : Fragment() {
             }
 
             binding.deleteButton.setOnClickListener {
-                deletePost()
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle("Delete")
+                    .setMessage("Are you sure you want to delete this post?")
+                    .setPositiveButton("Yes") { _, _ ->
+                        deletePost()
+                    }
+                    .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+                    .show()
             }
         }
     }
