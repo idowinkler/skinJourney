@@ -59,28 +59,27 @@
         android:elevation="0dp"
         android:text="edit"
         android:textSize="16sp"
+        app:backgroundTint="#9160D5"
         app:cornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/postImage"
-        app:strokeColor="?attr/colorPrimary"
-        app:strokeWidth="2dp" />
+         />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/deleteButton"
         android:layout_width="110dp"
         android:layout_height="48dp"
         android:layout_marginTop="175dp"
-        android:elevation="0dp"
         android:text="delete"
+        android:backgroundTint="#DE4040"
         android:textSize="16sp"
         app:cornerRadius="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.357"
         app:layout_constraintStart_toEndOf="@+id/editButton"
         app:layout_constraintTop_toBottomOf="@id/postImage"
-        app:strokeColor="?attr/colorPrimary"
-        app:strokeWidth="2dp" />
+         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
