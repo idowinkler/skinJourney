@@ -23,7 +23,7 @@ class ExploreViewHolder(
         this.post = post
         binding.username.text = post?.userName
 
-        post?.imageUrl?.let { userImageUrl ->
+        post?.userImageUrl?.let { userImageUrl ->
             if (userImageUrl.isNotBlank()) {
                 Picasso.get()
                     .load(userImageUrl)
